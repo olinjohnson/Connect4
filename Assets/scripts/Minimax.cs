@@ -30,7 +30,7 @@ public class Minimax
 
     public int? Run(Board ghostMove, int depth, int currentDepth)
     {
-        int potential_win = Evaluate(ghostMove);
+        int potential_win = Evaluate(ghostMove, currentDepth);
         if (potential_win != 0 || depth == currentDepth)
         {
             return potential_win;
@@ -64,7 +64,7 @@ public class Minimax
         }
     }
 
-    public int Evaluate(Board b)
+    public int Evaluate(Board b, int currentDepth)
     {
         int[] p_directions = { 6, 5, 1, 7 };
         foreach (int d in p_directions)
@@ -74,11 +74,11 @@ public class Minimax
             ulong r_pair = b.red_pos & (b.red_pos >> d);
             if ((y_pair & (y_pair >> (2 * d))) != 0)
             {
-                return 1;
+                return 100 - currentDepth;
             }
             if ((r_pair & (r_pair >> (2 * d))) != 0)
             {
-                return -1;
+                return -100 + currentDepth;
             }
         }
         return 0;
