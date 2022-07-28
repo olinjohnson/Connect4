@@ -1,14 +1,13 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Game {
 
-    public bool turn = false;
-
     public int DetectWin(Board b)
     {
-        int[] p_directions = {6, 5, 1, 7};
+        int[] p_directions = {7, 6, 1, 8};
         foreach(int d in p_directions)
         {
             // Could be vectorized
@@ -40,7 +39,7 @@ public class Game {
     {
         // Retrieve column in question
         ulong pieces = b.red_pos | b.yellow_pos;
-        ulong column = (((ulong)0x3F << (6 * col)) & pieces) >> (6 * col);
+        ulong column = (((ulong)0x3F << (7 * col)) & pieces) >> (7 * col);
         // Check if column is full
         if(column < 0x20)
         {
@@ -52,36 +51,61 @@ public class Game {
         }
     }
 
-    public void makeMove(Board b, int col)
+    public Board MakeMove(Board b, int col)
     {
         // Retrieve column in question
         ulong pieces = b.red_pos | b.yellow_pos;
-        ulong selected_col = (((ulong)0x3F << (6 * col)) & pieces) >> (6 * col);
+        ulong selected_col = (((ulong)0x3F << (7 * col)) & pieces) >> (7 * col);
         // Add piece via dilation
         ulong selected_piece = selected_col ^ (selected_col << 1);
         selected_piece ^= 1;
         // Update board with new piece
-        selected_piece = selected_piece << (6 * col);
+        selected_piece = selected_piece << (7 * col);
 
-        if (turn)
+        Board copy = new Board(b.yellow_pos, b.red_pos, b.turn);
+
+        if (copy.turn)
         {
-            b.red_pos |= selected_piece;
+            copy.red_pos |= selected_piece;
         }
         else
         {
-            b.yellow_pos |= selected_piece;
+            copy.yellow_pos |= selected_piece;
         }
+
+        copy.turn = !copy.turn;
+
+        return copy;
     }
 
     public int AIMove(Board b)
     {
-        Minimax algo = new Minimax(b, this, 6);
-        int move = Random.Range(0, 7);
-        while(!ValidMove(b, move))
-        {
-            move = Random.Range(0, 7);
-        }
-        return move;
+        Minimax algo = new Minimax(b, this);
+        return algo.FindIdealMove(b, 8);
     }
 
+    public int? MinElem(int?[] arr)
+    {
+        int? min = null;
+        for(int i = 0; i < arr.Length; i++)
+        {
+            if(arr[i] < min || min == null)
+            {
+                min = arr[i];
+            }
+        }
+        return min;
+    }
+    public int? MaxElem(int?[] arr)
+    {
+        int? max = null;
+        for (int i = 0; i < arr.Length; i++)
+        {
+            if (arr[i] > max || max == null)
+            {
+                max = arr[i];
+            }
+        }
+        return max;
+    }
 }

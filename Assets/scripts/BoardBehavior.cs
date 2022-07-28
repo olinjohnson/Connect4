@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class BoardBehavior : MonoBehaviour
 {
@@ -37,12 +36,12 @@ public class BoardBehavior : MonoBehaviour
     {
         while(game.DetectWin(board) == 0)
         {
-            if(!game.turn)
+            if(!board.turn)
             {
                 // Player Move
                 arrowContainer.SetActive(true);
                 textContainer.SetActive(true);
-                yield return new WaitUntil(() => game.turn);
+                yield return new WaitUntil(() => board.turn);
                 arrowContainer.SetActive(false);
                 textContainer.SetActive(false);
                 yield return new WaitForSeconds(1);
@@ -51,9 +50,8 @@ public class BoardBehavior : MonoBehaviour
             {
                 // Ai Move
                 int aicoord = game.AIMove(board);
-                game.makeMove(board, aicoord);
+                board = game.MakeMove(board, aicoord);
                 Instantiate(redCoinPrefab, new Vector3(coinCoordsX, coinCoordsY, coinCoordsZ[aicoord]), Quaternion.identity);
-                game.turn = false;
                 yield return new WaitForSeconds(1);
             }
         }
@@ -77,9 +75,8 @@ public class BoardBehavior : MonoBehaviour
     {
         if (game.ValidMove(board, position))
         {
-            game.makeMove(board, position);
+            board = game.MakeMove(board, position);
             Instantiate(yellowCoinPrefab, new Vector3(coinCoordsX, coinCoordsY, coinCoordsZ[position]), Quaternion.identity);
-            game.turn = true;
             return true;
         }
         else
