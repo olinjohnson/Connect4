@@ -81,7 +81,7 @@ public class Game {
     public int AIMove(Board b)
     {
         Minimax algo = new Minimax(b, this);
-        return algo.FindIdealMove(b, 9);
+        return algo.FindIdealMove(b, 8);
     }
 
     public int? MinElem(int?[] arr)
