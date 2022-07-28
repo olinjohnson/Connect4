@@ -22,23 +22,29 @@ public class Minimax
         nodes_searched = 0;
         var watch = System.Diagnostics.Stopwatch.StartNew();
 
-        int?[] scores = new int?[7];
+
+        int[] scores = new int[7];
+        int least = 1000;
         for (int i = 0; i < 7; i++)
         {
             if (game.ValidMove(b, i))
             {
-                scores[i] = Run(game.MakeMove(b, i), depth, 1) + position_offsets[i];
+                int node = Run(game.MakeMove(b, i), depth, 1, -1000, 1000) + position_offsets[i];
+                least = Math.Min(least, node);
+                scores[i] = node;
+                Debug.Log(node);
             }
         }
+
 
         watch.Stop();
         var elapsed = watch.ElapsedMilliseconds;
         Debug.Log("Nodes searched: " + nodes_searched + " Time(ms): " + elapsed);
 
-        return Array.IndexOf(scores, game.MinElem(scores));
+        return Array.IndexOf(scores, least);
     }
 
-    public int? Run(Board ghostMove, int depth, int currentDepth)
+    public int Run(Board ghostMove, int depth, int currentDepth, int alpha, int beta)
     {
         nodes_searched++;
         // Evaluate position
@@ -51,31 +57,37 @@ public class Minimax
         // Evaluate child nodes
         else
         {
-            int?[] scores = new int?[7];
-            for (int i = 0; i < 7; i++)
+            if(!ghostMove.turn)
             {
-                if (game.ValidMove(ghostMove, i))
+                int best = -1000;
+                for (int i = 0; i < 7; i++)
                 {
-                    scores[i] = Run(game.MakeMove(ghostMove, i), depth, currentDepth + 1);
+                    if (game.ValidMove(ghostMove, i))
+                    {
+                        int childVal = Run(game.MakeMove(ghostMove, i), depth, currentDepth + 1, alpha, beta);
+                        best = Math.Max(best, childVal);
+                        alpha = Math.Max(alpha, childVal);
+                        if (beta <= alpha) { break; }
+                    }
                 }
-            }
-            // If it's a draw
-            if(!(scores.Length == 0) && !(scores == null))
-            {
-                if (ghostMove.turn)
-                {
-                    return game.MinElem(scores);
-                }
-                else
-                {
-                    return game.MaxElem(scores);
-                }
+                return best;
             }
             else
             {
-                return 0;
-            }
+                int least = 1000;
+                for (int i = 0; i < 7; i++)
+                {
+                    if (game.ValidMove(ghostMove, i))
+                    {
+                        int childVal = Run(game.MakeMove(ghostMove, i), depth, currentDepth + 1, alpha, beta);
+                        least = Math.Min(least, childVal);
+                        beta = Math.Min(beta, least);
+                        if (beta <= alpha) { break; }
 
+                    }
+                }
+                return least;
+            }
         }
     }
 
