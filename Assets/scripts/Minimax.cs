@@ -9,7 +9,7 @@ public class Minimax
     public Game game;
 
     public uint nodes_searched;
-    public int[] position_offsets = { 3, 2, 1, 0, 1, 2, 3 };
+    public float[] position_offsets = { 0.3f, 0.2f, 0.1f, 0f, 0.1f, 0.2f, 0.3f };
 
     public Minimax(Board b, Game g)
     {
@@ -22,17 +22,15 @@ public class Minimax
         nodes_searched = 0;
         var watch = System.Diagnostics.Stopwatch.StartNew();
 
-
-        int[] scores = new int[7];
-        int least = 1000;
+        float[] scores = new float[7];
+        float least = 1000;
         for (int i = 0; i < 7; i++)
         {
             if (game.ValidMove(b, i))
             {
-                int node = Run(game.MakeMove(b, i), depth, 1, -1000, 1000) + position_offsets[i];
+                float node = Run(game.MakeMove(b, i), depth, 1, -1000, 1000) + position_offsets[i];
                 least = Math.Min(least, node);
                 scores[i] = node;
-                Debug.Log(node);
             }
         }
 
@@ -44,7 +42,8 @@ public class Minimax
         return Array.IndexOf(scores, least);
     }
 
-    public int Run(Board ghostMove, int depth, int currentDepth, int alpha, int beta)
+
+    public float Run(Board ghostMove, int depth, int currentDepth, float alpha, float beta)
     {
         nodes_searched++;
         // Evaluate position
@@ -59,14 +58,14 @@ public class Minimax
         {
             if(!ghostMove.turn)
             {
-                int best = -1000;
+                float best = -1000;
                 for (int i = 0; i < 7; i++)
                 {
                     if (game.ValidMove(ghostMove, i))
                     {
-                        int childVal = Run(game.MakeMove(ghostMove, i), depth, currentDepth + 1, alpha, beta);
+                        float childVal = Run(game.MakeMove(ghostMove, i), depth, currentDepth + 1, alpha, beta) + position_offsets[i];
                         best = Math.Max(best, childVal);
-                        alpha = Math.Max(alpha, childVal);
+                        alpha = Math.Max(alpha, best);
                         if (beta <= alpha) { break; }
                     }
                 }
@@ -74,16 +73,15 @@ public class Minimax
             }
             else
             {
-                int least = 1000;
+                float least = 1000;
                 for (int i = 0; i < 7; i++)
                 {
                     if (game.ValidMove(ghostMove, i))
                     {
-                        int childVal = Run(game.MakeMove(ghostMove, i), depth, currentDepth + 1, alpha, beta);
+                        float childVal = Run(game.MakeMove(ghostMove, i), depth, currentDepth + 1, alpha, beta) + position_offsets[i];
                         least = Math.Min(least, childVal);
                         beta = Math.Min(beta, least);
                         if (beta <= alpha) { break; }
-
                     }
                 }
                 return least;
@@ -93,7 +91,7 @@ public class Minimax
 
     public int Evaluate(Board b, int currentDepth)
     {
-        int[] p_directions = { 6, 5, 1, 7 };
+        int[] p_directions = { 7, 6, 1, 8 };
         foreach (int d in p_directions)
         {
             // Could be vectorized

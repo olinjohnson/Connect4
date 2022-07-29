@@ -35,6 +35,7 @@ public class Game {
         return 3;
     }
 
+
     public bool ValidMove(Board b, int col)
     {
         // Retrieve column in question
@@ -82,30 +83,5 @@ public class Game {
     {
         Minimax algo = new Minimax(b, this);
         return algo.FindIdealMove(b, 10);
-    }
-
-    public int? MinElem(int?[] arr)
-    {
-        int? min = null;
-        for(int i = 0; i < arr.Length; i++)
-        {
-            if(arr[i] < min || min == null)
-            {
-                min = arr[i];
-            }
-        }
-        return min;
-    }
-    public int? MaxElem(int?[] arr)
-    {
-        int? max = null;
-        for (int i = 0; i < arr.Length; i++)
-        {
-            if (arr[i] > max || max == null)
-            {
-                max = arr[i];
-            }
-        }
-        return max;
     }
 }
