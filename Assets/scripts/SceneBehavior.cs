@@ -27,8 +27,11 @@ public class SceneBehavior : MonoBehaviour
     {
         if(mainMenu.activeInHierarchy)
         {
+            bool showStatistics = PlayerPrefs.showStats;
             mainMenu.SetActive(false);
             optionsMenu.SetActive(true);
+            depthSlider.value = PlayerPrefs.searchDepth;
+            statsToggle.isOn = showStatistics;
         }
         else
         {
