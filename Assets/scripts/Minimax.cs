@@ -37,7 +37,8 @@ public class Minimax
 
         watch.Stop();
         var elapsed = watch.ElapsedMilliseconds;
-        Debug.Log("Nodes searched: " + nodes_searched + " Time(ms): " + elapsed);
+        PlayerPrefs.nodesSearched = nodes_searched;
+        PlayerPrefs.timeSearched = elapsed;
 
         return Array.IndexOf(scores, least);
     }

@@ -79,9 +79,9 @@ public class Game {
         return copy;
     }
 
-    public int AIMove(Board b)
+    public int AIMove(Board b, int d)
     {
         Minimax algo = new Minimax(b, this);
-        return algo.FindIdealMove(b, 10);
+        return algo.FindIdealMove(b, d);
     }
 }

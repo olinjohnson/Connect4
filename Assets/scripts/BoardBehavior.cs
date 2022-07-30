@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class BoardBehavior : MonoBehaviour
@@ -16,6 +17,7 @@ public class BoardBehavior : MonoBehaviour
     public GameObject winningText;
     public GameObject losingText;
     public GameObject drawText;
+    public TextMeshProUGUI statsText;
 
     private Game game;
     private Board board;
@@ -49,9 +51,13 @@ public class BoardBehavior : MonoBehaviour
             else
             {
                 // Ai Move
-                int aicoord = game.AIMove(board);
+                int aicoord = game.AIMove(board, PlayerPrefs.searchDepth);
                 board = game.MakeMove(board, aicoord);
                 Instantiate(redCoinPrefab, new Vector3(coinCoordsX, coinCoordsY, coinCoordsZ[aicoord]), Quaternion.identity);
+                if(PlayerPrefs.showStats)
+                {
+                    statsText.text = "Nodes searched: " + PlayerPrefs.nodesSearched + "      Time spent: " + PlayerPrefs.timeSearched + " ms";
+                }
                 yield return new WaitForSeconds(1);
             }
         }
