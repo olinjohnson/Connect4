@@ -17,6 +17,13 @@ public class SceneBehavior : MonoBehaviour
     public void InitiateAIGame()
     {
         UpdatePrefs();
+        PlayerPrefs.AIOpponent = true;
+        SceneManager.LoadScene("main");
+    }
+    public void InitiatePlayerGame()
+    {
+        UpdatePrefs();
+        PlayerPrefs.AIOpponent = false;
         SceneManager.LoadScene("main");
     }
     public void LoadMainMenu()

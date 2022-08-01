@@ -28,7 +28,15 @@ public class ArrowBehavior : MonoBehaviour
             self.GetComponentInChildren<Renderer>().material = newMat;
             if (Input.GetMouseButtonDown(0))
             {
-                boardBehavior.MakePlayerMove(self.name[self.name.Length - 1] - 48);
+                if(!boardBehavior.board.turn)
+                {
+                    boardBehavior.MakePlayerMove(self.name[self.name.Length - 1] - 48, boardBehavior.yellowCoinPrefab);
+                }
+                else
+                {
+                    boardBehavior.MakePlayerMove(self.name[self.name.Length - 1] - 48, boardBehavior.redCoinPrefab);
+                }
+
             }
         } else
         {
