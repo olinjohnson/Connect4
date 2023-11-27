@@ -8,4 +8,6 @@ It also uses Bitboards for optimized speed and efficiency.
 
 Built with Unity
 
+Supplementary blog post [on my website](https://olinjohnson.github.io/posts/optimizations-using-bitboards/)
+
 ![Connect4 gameplay](Assets/connect4-frame.png)
